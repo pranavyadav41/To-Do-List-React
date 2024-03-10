@@ -1,10 +1,23 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import './index.css'
 
 function ToDoList() {
 
     const [tasks,setTasks]=useState([])
     const [newTask,setNewTask]=useState("")
+
+    useEffect(() => {
+       
+        const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+        if (storedTasks) {
+          setTasks(storedTasks);
+        }
+      }, []);
+    
+      useEffect(() => {
+       
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      }, [tasks]);
 
     function handleInputChange(event){
 
@@ -18,7 +31,7 @@ function ToDoList() {
 
         if(newTask.trim()!==""){
 
-            setTasks([...tasks,newTask])
+            setTasks([...tasks,{name:newTask,completed:false}])
             setNewTask("")
     
 
@@ -63,6 +76,14 @@ function ToDoList() {
         }
 
     }
+    function completion(index){
+
+        var updateTasks=[...tasks]
+
+        updateTasks[index].completed= !updateTasks[index].completed
+        setTasks(updateTasks)
+
+    }
     
     return (
     <div className="to-do-list">
@@ -77,13 +98,15 @@ function ToDoList() {
             </button>
         </div>
         <ol>
-            {tasks.map((task,index)=><li key={index}><span className="text">{task}</span>
+            {tasks.map((task,index)=><li key={index}>
+                    <input type="checkbox" onChange={()=>completion(index)} checked={task.completed} id="tick" className="checkBox" /><span className="text" style={{textDecoration :task.completed ?'line-through' : 'none'}}>{task.name}</span>
                     <button onClick={()=>deleteTask(index)} className="delete-button">Delete</button>
                     <button onClick={()=>moveTaskUp(index)} className="move-button">👆</button>
                     <button onClick={()=>moveTaskDown(index)} className="move-button">👇</button>
                     </li>)}
             
         </ol>
+        
       
       
     </div>

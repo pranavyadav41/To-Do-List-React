@@ -78,6 +78,7 @@ li{
 }
 .text{
     flex:1;
+    
 }
 .delete-button,.move-button{
     padding:8px 12px;
@@ -85,4 +86,8 @@ li{
     margin-left: 10px;
 
 
+}
+.checkBox{
+    width:30px;
+    height:30px;
 }
